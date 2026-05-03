@@ -9,26 +9,24 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest # Chạy trên máy chủ ảo Linux của GitHub
+    # 1. Cấu hình Matrix Strategy
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    # 2. Thay vì fix cứng ubuntu, ta bảo GitHub chạy trên các HĐH trong ma trận
+    runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout mã nguồn từ GitHub về máy chủ ảo
+      - name: Checkout mã nguồn
         uses: actions/checkout@v4
 
       - name: Cài đặt môi trường Java 21
         uses: actions/setup-java@v4
         with:
-          java-version: '21' # Khớp với cấu hình pom.xml của bạn
+          java-version: '21'
           distribution: 'temurin'
           cache: maven
 
-      # 2. Thực thi vòng đời build của Maven (chạy test và package)
       - name: Build dự án với Maven
         run: mvn clean test package
-
-      # 3. Triển khai action upload-artifact để giữ lại file .jar
-      - name: Lưu trữ file .jar đã được đóng gói
-        uses: actions/upload-artifact@v4
-        with:
-          name: JavaExercises-Artifact # Tên của file zip sẽ tải về
-          path: target/*.jar # Tìm và lưu toàn bộ file .jar trong thư mục target
