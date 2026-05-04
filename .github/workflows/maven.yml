@@ -32,6 +32,7 @@ jobs:
         run: mvn clean verify
 
       - name: Lưu trữ báo cáo Code Coverage (JaCoCo)
+        if: always() # THÊM DÒNG NÀY: Ép chạy bước này ngay cả khi bước trên bị lỗi đỏ
         uses: actions/upload-artifact@v4
         with:
           name: JaCoCo-Report-${{ matrix.os }}
