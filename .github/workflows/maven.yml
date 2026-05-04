@@ -29,4 +29,10 @@ jobs:
           cache: maven
 
       - name: Build dự án với Maven
-        run: mvn clean test package
+        run: mvn clean verify
+
+      - name: Lưu trữ báo cáo Code Coverage (JaCoCo)
+        uses: actions/upload-artifact@v4
+        with:
+          name: JaCoCo-Report-${{ matrix.os }}
+          path: target/site/jacoco/
