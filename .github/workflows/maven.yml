@@ -32,8 +32,16 @@ jobs:
         run: mvn clean verify
 
       - name: Lưu trữ báo cáo Code Coverage (JaCoCo)
-        if: always() # THÊM DÒNG NÀY: Ép chạy bước này ngay cả khi bước trên bị lỗi đỏ
+        if: always() # Ép chạy bước này ngay cả khi bước trên bị lỗi đỏ
         uses: actions/upload-artifact@v4
         with:
           name: JaCoCo-Report-${{ matrix.os }}
           path: target/site/jacoco/
+
+      # BƯỚC MỚI THÊM CHO BÀI 7: Bot tự động review code
+      - name: Bot tự động Comment lỗi Checkstyle vào PR
+        if: always() # Ép bot phải chạy để báo lỗi kể cả khi Maven build xịt
+        uses: dbelyaev/action-checkstyle@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
