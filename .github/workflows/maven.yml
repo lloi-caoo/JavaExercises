@@ -40,7 +40,8 @@ jobs:
 
       # BƯỚC MỚI THÊM CHO BÀI 7: Bot tự động review code
       - name: Bot tự động Comment lỗi Checkstyle vào PR
-        if: always() # Ép bot phải chạy để báo lỗi kể cả khi Maven build xịt
+        # Ép chạy kể cả khi lỗi, NHƯNG CHỈ trên máy Ubuntu
+        if: always() && matrix.os == 'ubuntu-latest'
         uses: dbelyaev/action-checkstyle@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
